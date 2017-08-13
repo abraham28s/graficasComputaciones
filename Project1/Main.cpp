@@ -1,4 +1,12 @@
-﻿#include<iostream>
+﻿
+/*********************************************************
+Materia: Graficas computacionales
+Fecha: 13/08/2017
+Autor: Abraham Soto A01370699
+*********************************************************/
+
+
+#include<iostream>
 
 int PerimetroRectangulo(int base, int altura);
 float AreaTriangulo(float base, float altura);
