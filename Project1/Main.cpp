@@ -7,6 +7,8 @@ Autor: Abraham Soto A01370699
 
 
 #include<iostream>
+#include "Circle.h"
+#include "Employee.h"
 
 int PerimetroRectangulo(int base, int altura);
 float AreaTriangulo(float base, float altura);
@@ -20,6 +22,17 @@ void Fibonacci(int n);
 bool EsPrimo(int numero);
 
 int main() {
+
+	//Employee 
+	Employee Javi(1, "Javier", "Esponda", 10);
+	std::cout << Javi.Print() << "\n";
+
+
+	////////Circle
+	Circle circulo(2.0, "green");
+	std::cout << circulo.GetRadius() << std::endl;
+	///////
+
 	int p = PerimetroRectangulo(5, 3);
 	std::cout << p << "\n";
 
