@@ -5,10 +5,27 @@ Fecha: 13/08/2017
 Autor: Abraham Soto A01370699
 *********************************************************/
 
+#include <GL/glew.h>
+#include <GL/freeglut.h>
 
-#include<iostream>
-#include "Circle.h"
-#include "Employee.h"
+void GameLoop(){
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+	//OpenGL viejo, no se puede usar despues.
+	glBegin(GL_TRIANGLES);
+
+	glColor3f(1.0f, 0.0f, 0.0f);
+	glVertex2f(-1.0f,-1.0f);
+	glColor3f(0.0f, 1.0f, 0.0f);
+	glVertex2f(1.0f, -1.0f);
+	glColor3f(0.0f, 0.0f, 1.0f);
+	glVertex2f(0.0f, 1.0f);
+
+
+	glEnd();
+
+	glutSwapBuffers();
+}
 
 int PerimetroRectangulo(int base, int altura);
 float AreaTriangulo(float base, float altura);
@@ -21,8 +38,38 @@ void FlechaEstrellas(int n);
 void Fibonacci(int n);
 bool EsPrimo(int numero);
 
-int main() {
+int main(int argc, char* argv[]) {
 
+	//Inicializar freeglut
+	//SE encarga de crear una ventanta en donde podemos dibujar.
+
+	glutInit(&argc, argv);
+
+	//Iniciar el contexto de OpenGL. El contexto se refiere a las capacidades que va a tener nuestra app grafica.
+	//En este caso estamos trabajando con el pipelineclasico
+	glutInitContextProfile(GLUT_COMPATIBILITY_PROFILE);
+	//Freeglut nos permite configurar eventos que ocurren en la ventana. un evento que nos interesa es cuando alguien cierra la ventana.
+	//En este caso, simplemente dejamos de renderear la escena y terminamos el programa.
+	glutSetOption(GLUT_ACTION_ON_WINDOW_CLOSE, GLUT_ACTION_GLUTMAINLOOP_RETURNS);
+	//Configuramos el frame buffer. En este caso estamos solicitando un buffer true color RGBA, un buffer de profundidad y un segundo buffer para renderear
+	glutInitDisplayMode(GLUT_RGBA | GLUT_DEPTH | GLUT_DOUBLE);
+	//iniciar las dimensiones de la ventana en pixeles
+	glutInitWindowSize(400, 400);
+	//Se crea como tal la ventana con un titulo dado.
+	glutCreateWindow("Hello World GL");
+	//Asociamos una funcion de render, esta funcion se mandara a llamara para dibujar un frame.
+	glutDisplayFunc(GameLoop);
+
+	//Inicializamos GLEW. Esta libreria se encarga de obtener el API de OpenGL de nuestra tarjeta de video. 
+	glewInit();
+
+	//Configurar OpenGL. Este es el color por default del buffer de color del frame buffer.
+	glClearColor(1.0f, 1.0f, 0.5F, 1.0f);
+
+	//iniciar la aplicacion. El main se pausara en esta linea hasta que se cierre la ventana.
+	glutMainLoop();
+
+	/*
 	//Employee 
 	Employee Javi(1, "Javier", "Esponda", 10);
 	std::cout << Javi.Print() << "\n";
@@ -60,11 +107,11 @@ int main() {
 	Fibonacci(9);
 	std::cout << "\n";
 
-	std::cout << EsPrimo(79) << " " << EsPrimo(52);
-	std::cin.get();
+	std::cout << EsPrimo(79) << " " << EsPrimo(52);*/
+	
 	return 0;
 }
-
+/*
 int PerimetroRectangulo(int base, int altura) {
 	return (base*2)+(altura*2);
 }
@@ -163,4 +210,4 @@ bool EsPrimo(int numero) {
 		}
 	}
 	return true;
-}
+}*/
