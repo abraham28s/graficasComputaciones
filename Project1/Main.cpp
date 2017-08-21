@@ -1,10 +1,31 @@
-﻿
+﻿/*********************************************************
+Materia: Graficas computacionales
+Fecha: 20/08/2017
+Autor: Abraham Soto A01370699
+*********************************************************/
+#include <iostream>
+#include "InputFile.h"
+int main(int argc, char* argv[]) {
+	std::string filename = "Prueba.txt"; InputFile myFile;
+	myFile.Read(filename);
+	std::string contents = myFile.GetContents();
+	std::cout << "Contents: " << contents << std::endl;
+	std::cin.get();
+	return 0;
+}
+
+
+
+
+
+
+
 /*********************************************************
 Materia: Graficas computacionales
 Fecha: 13/08/2017
 Autor: Abraham Soto A01370699
 *********************************************************/
-
+/*
 #include <GL/glew.h>
 #include <GL/freeglut.h>
 
@@ -107,11 +128,11 @@ int main(int argc, char* argv[]) {
 	Fibonacci(9);
 	std::cout << "\n";
 
-	std::cout << EsPrimo(79) << " " << EsPrimo(52);*/
+	std::cout << EsPrimo(79) << " " << EsPrimo(52);
 	
 	return 0;
 }
-/*
+
 int PerimetroRectangulo(int base, int altura) {
 	return (base*2)+(altura*2);
 }
