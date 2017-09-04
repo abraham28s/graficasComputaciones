@@ -1,234 +1,191 @@
-﻿/*********************************************************
-Materia: Graficas computacionales
-Fecha: 20/08/2017
-Autor: Abraham Soto A01370699
-*********************************************************/
-#include <iostream>
-#include "InputFile.h"
-int main(int argc, char* argv[]) {
-	std::string filename = "Prueba.txt"; InputFile myFile;
-	myFile.Read(filename);
-	std::string contents = myFile.GetContents();
-	std::cout << "Contents: " << contents << std::endl;
-	std::cin.get();
-	return 0;
-}
-
-
-
-
-
-
-
-/*********************************************************
-Materia: Graficas computacionales
-Fecha: 13/08/2017
-Autor: Abraham Soto A01370699
-*********************************************************/
-/*
 #include <GL/glew.h>
 #include <GL/freeglut.h>
+#include <iostream>
+#include <glm/glm.hpp>
+#include <vector>
+#include "InputFile.h"
 
-void GameLoop(){
+// Identificador del manager al que vamos a asociar todos los VBOs
+GLuint vao;
+
+// Identifcador del manager de los shaders (shaderProgram)
+GLuint shaderProgram;
+
+void Initialize()
+{
+	// Creando toda la memoria que el programa va a utilizar.
+
+	// Creación del atributo de posiciones de los vértices.
+	// Lista de vec2
+	// Claramente en el CPU y RAM
+	std::vector<glm::vec2> positions;
+	std::vector<glm::vec3> colors;
+
+	////////////////////////////////////////////////////
+	positions.push_back(glm::vec2(0.0f,0.0f));
+	colors.push_back(glm::vec3(1.0f, 1.0f, 1.0f));
+	for (int i = 0; i <= 360; i++) {
+		positions.push_back(glm::vec2((float)glm::cos(glm::radians((float)i)),(float)glm::sin(glm::radians((float)i))));
+		colors.push_back(glm::vec3((float)glm::cos(glm::radians((float)i)), (float)glm::sin(glm::radians((float)i)), 0.0f));
+	}
+
+	/////////////////////////////////////////////////
+	
+	//positions.push_back(glm::vec2(-1.0f, -1.0f));
+	//positions.push_back(glm::vec2(1.0f, -1.0f));
+	//positions.push_back(glm::vec2(0.0f, 1.0f));
+	// Arreglo de colores en el cpu
+	
+	
+	//colors.push_back(glm::vec3(0.0f, 1.0f, 0.0f));
+	//colors.push_back(glm::vec3(0.0f, 0.0f, 1.0f));
+
+	// Queremos generar 1 manager
+	glGenVertexArrays(1, &vao);
+	// Utilizar el vao. A partir de este momento, todos VBOs creados y configurados
+	// se van a asociar a este manager.
+	glBindVertexArray(vao);
+
+	// Identificador del VBO de posiciones.
+	GLuint positionsVBO;
+	// Creación del VBO de posiciones
+	glGenBuffers(1, &positionsVBO);
+	// Activamos el buffer de posiciones para poder utilizarlo
+	glBindBuffer(GL_ARRAY_BUFFER, positionsVBO);
+	// Creamos la memoria y la inicializamos con los datos del atributo de posiciones
+	glBufferData(GL_ARRAY_BUFFER, sizeof(glm::vec2) * positions.size(),
+		positions.data(), GL_STATIC_DRAW);
+	// Activamos el atributo en la tarjeta de video
+	glEnableVertexAttribArray(0);
+	// Configuramos los datos del atributo en la tarjeta de video-
+	glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 0, nullptr);
+	// Ya no vamos a utilizar este VBO en este momento.
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
+
+	GLuint colorsVBO;
+	glGenBuffers(1, &colorsVBO);
+	glBindBuffer(GL_ARRAY_BUFFER, colorsVBO);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(glm::vec3) * colors.size(),
+		colors.data(), GL_STATIC_DRAW);
+	glEnableVertexAttribArray(1);
+	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 0, nullptr);
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
+
+	// Desactivamos el manager
+	glBindVertexArray(0);
+
+	// Creamos un objeto para leer archivos de texto
+	InputFile ifile;
+
+	// VERTEX SHADER
+	// Leemos el archivo Default.vert donde está
+	// el código del vertex shader.
+	ifile.Read("DiscardCenter.vert");
+	// Obtenemos el código fuente y lo guardamos
+	// en un string
+	std::string vertexSource = ifile.GetContents();
+	// Creamos un shader de tipo vertex
+	// guardamos su identificador en una variable.
+	GLuint vertexShaderHandle =
+		glCreateShader(GL_VERTEX_SHADER);
+	// Obtener los datos en el formato correcto
+	const GLchar *vertexSource_c =
+		(const GLchar*)vertexSource.c_str();
+	// Le estamos dando el código fuente a OpenGL
+	// para que se lo asigne al shader
+	glShaderSource(vertexShaderHandle, 1,
+		&vertexSource_c, nullptr);
+	// Compilamos el shader en busca de errores.
+	// Vamos a asumir que no hay ningún error.
+	glCompileShader(vertexShaderHandle);
+
+	ifile.Read("DiscardCenter.frag");
+	std::string fragmentSource = ifile.GetContents();
+	GLuint fragmentShaderHandle = glCreateShader(GL_FRAGMENT_SHADER);
+	const GLchar *fragmentSource_c = (const GLchar*)fragmentSource.c_str();
+	glShaderSource(fragmentShaderHandle, 1, &fragmentSource_c, nullptr);
+	glCompileShader(fragmentShaderHandle);
+
+	// Creamos el identificador para el manager de los shaders
+	shaderProgram = glCreateProgram();
+	// Adjuntamos el vertex shader al manager (van a trabajar juntos)
+	glAttachShader(shaderProgram, vertexShaderHandle);
+	// Adjuntamos el fragment shader al manager (van a trabajar juntos)
+	glAttachShader(shaderProgram, fragmentShaderHandle);
+	// Asociamos un buffer con indice 0 (posiciones) a la variable VertexPosition
+	glBindAttribLocation(shaderProgram, 0, "VertexPosition");
+	// Asociamos un buffer con indice 1 (colores) a la variable VertexColor
+	glBindAttribLocation(shaderProgram, 1, "VertexColor");
+	// Ejecutamos el proceso de linker (asegurarnos que el vertex y fragment son
+	// compatibles)
+	glLinkProgram(shaderProgram);
+}
+
+void GameLoop()
+{
+	// Limpiamos el buffer de color y el buffer de profunidad.
+	// Siempre hacerlo al inicio del frame
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-	//OpenGL viejo, no se puede usar despues.
-	glBegin(GL_TRIANGLES);
+	// Activamos el vertex shader y el fragment shader utilizando el manager
+	glUseProgram(shaderProgram);
+	// Activamos el manager, en este momento se activan todos los
+	// VBOs asociados automáticamente.
+	glBindVertexArray(vao);
+	// Función de dibujado sin indices.
+	glDrawArrays(GL_TRIANGLE_FAN, 0, 362);
+	// Terminamos de utilizar el manager
+	glBindVertexArray(0);
+	// Desactivamos el manager
+	glUseProgram(0);
 
-	glColor3f(1.0f, 0.0f, 0.0f);
-	glVertex2f(-1.0f,-1.0f);
-	glColor3f(0.0f, 1.0f, 0.0f);
-	glVertex2f(1.0f, -1.0f);
-	glColor3f(0.0f, 0.0f, 1.0f);
-	glVertex2f(0.0f, 1.0f);
-
-
-	glEnd();
-
+	// Cuando terminamos de renderear, cambiamos los buffers.
 	glutSwapBuffers();
 }
 
-int PerimetroRectangulo(int base, int altura);
-float AreaTriangulo(float base, float altura);
-int Mayor(int numero1, int numero2, int numero3);
-int Menor(int numero1, int numero2, int numero3);
-void FilaEstrellas(int n);
-void MatrizEstrellas(int n);
-void PiramideEstrellas(int n);
-void FlechaEstrellas(int n);
-void Fibonacci(int n);
-bool EsPrimo(int numero);
-
-int main(int argc, char* argv[]) {
-
-	//Inicializar freeglut
-	//SE encarga de crear una ventanta en donde podemos dibujar.
-
+int main(int argc, char* argv[])
+{
+	// Inicializar freeglut
+	// Freeglut se encarga de crear una ventana
+	// en donde podemos dibujar
 	glutInit(&argc, argv);
-
-	//Iniciar el contexto de OpenGL. El contexto se refiere a las capacidades que va a tener nuestra app grafica.
-	//En este caso estamos trabajando con el pipelineclasico
-	glutInitContextProfile(GLUT_COMPATIBILITY_PROFILE);
-	//Freeglut nos permite configurar eventos que ocurren en la ventana. un evento que nos interesa es cuando alguien cierra la ventana.
-	//En este caso, simplemente dejamos de renderear la escena y terminamos el programa.
+	// Solicitando una versión específica de OpenGL.
+	glutInitContextVersion(4, 4);
+	// Iniciar el contexto de OpenGL. El contexto se refiere
+	// a las capacidades que va a tener nuestra aplicación
+	// gráfica.
+	// En este caso estamos trabajando con el pipeline programable.
+	glutInitContextProfile(GLUT_CORE_PROFILE);
+	// Freeglut nos permite configurar eventos que ocurren en la ventana.
+	// Un evento que nos interesa es cuando alguien cierra la ventana.
+	// En este caso, simplemente dejamos de renderear la esscena y terminamos el programa.
 	glutSetOption(GLUT_ACTION_ON_WINDOW_CLOSE, GLUT_ACTION_GLUTMAINLOOP_RETURNS);
-	//Configuramos el frame buffer. En este caso estamos solicitando un buffer true color RGBA, un buffer de profundidad y un segundo buffer para renderear
+	// Configuramos el framebuffer. En este caso estamos solicitando un buffer
+	// true color RGBA, un buffer de profundidad y un segundo buffer para renderear.
 	glutInitDisplayMode(GLUT_RGBA | GLUT_DEPTH | GLUT_DOUBLE);
-	//iniciar las dimensiones de la ventana en pixeles
+	// Iniciar las dimensiones de la ventana (en pixeles)
 	glutInitWindowSize(400, 400);
-	//Se crea como tal la ventana con un titulo dado.
+	// Creamos la ventana y le damos un título.
 	glutCreateWindow("Hello World GL");
-	//Asociamos una funcion de render, esta funcion se mandara a llamara para dibujar un frame.
+	// Asociamos una función de render. Esta función se mandará a llamar para dibujar un frame.
 	glutDisplayFunc(GameLoop);
 
-	//Inicializamos GLEW. Esta libreria se encarga de obtener el API de OpenGL de nuestra tarjeta de video. 
+	// Inicializar GLEW. Esta librería se encarga de obtener el API de OpenGL de
+	// nuestra tarjeta de video. SHAME ON YOU MICROSOFT.
 	glewInit();
 
-	//Configurar OpenGL. Este es el color por default del buffer de color del frame buffer.
-	glClearColor(1.0f, 1.0f, 0.5F, 1.0f);
+	// Configurar OpenGL. Este es el color por default del buffer de color
+	// en el framebuffer.
+	glClearColor(1.0f, 1.0f, 0.5f, 1.0f);
 
-	//iniciar la aplicacion. El main se pausara en esta linea hasta que se cierre la ventana.
+	std::cout << glGetString(GL_VERSION) << std::endl;
+
+	// Configuración inicial de nuestro programa.
+	Initialize();
+
+	// Iniciar la aplicación. El main se pausará en esta línea hasta que se cierre
+	// la venta de OpenGL.
 	glutMainLoop();
 
-	/*
-	//Employee 
-	Employee Javi(1, "Javier", "Esponda", 10);
-	std::cout << Javi.Print() << "\n";
-
-
-	////////Circle
-	Circle circulo(2.0, "green");
-	std::cout << circulo.GetRadius() << std::endl;
-	///////
-
-	int p = PerimetroRectangulo(5, 3);
-	std::cout << p << "\n";
-
-	float a = AreaTriangulo(5.0f, 3.0f);
-	std::cout << a << "\n";
-
-	int mayor = Mayor(5, 9, 1);
-	std::cout << mayor << "\n";
-
-	int menor = Menor(5, 9, 1);
-	std::cout << menor << "\n";
-
-	FilaEstrellas(5);
-	std::cout << "\n";
-
-	MatrizEstrellas(4);
-	std::cout << "\n";
-
-	PiramideEstrellas(6);
-	std::cout << "\n";
-
-	FlechaEstrellas(3);
-	std::cout << "\n";
-
-	Fibonacci(9);
-	std::cout << "\n";
-
-	std::cout << EsPrimo(79) << " " << EsPrimo(52);
-	
 	return 0;
 }
-
-int PerimetroRectangulo(int base, int altura) {
-	return (base*2)+(altura*2);
-}
-
-float AreaTriangulo(float base, float altura) {
-	return (base*altura) / 2;
-}
-
-int Mayor(int numero1, int numero2, int numero3) {
-	if (numero1 >= numero2 && numero1 >= numero3){
-		return numero1;
-	}else if (numero2 >= numero1 && numero2 >= numero3){
-		return numero2;
-	}
-	else {
-		return numero3;
-	}
-}
-
-int Menor(int numero1, int numero2, int numero3) {
-	if (numero1 <= numero2 && numero1 <= numero3) {
-		return numero1;
-	}
-	else if (numero2 <= numero1 && numero2 <= numero3) {
-		return numero2;
-	}
-	else {
-		return numero3;
-	}
-}
-
-void FilaEstrellas(int n) {
-	for (int i = 0; i < n; i++)
-	{
-		std::cout << "*";
-	}
-	std::cout << "\n";
-}
-
-void MatrizEstrellas(int n) {
-	for (int j = 0; j < n; j++)
-	{
-		for (int i = 0; i < n; i++)
-		{
-			std::cout << "*";
-		}
-		std::cout << "\n";
-	}
-}
-
-void PiramideEstrellas(int n) {
-	for (int j = 0; j < n; j++)
-	{
-		for (int i = 0; i < j+1; i++)
-		{
-			std::cout << "*";
-		}
-		std::cout << "\n";
-	}
-}
-
-void FlechaEstrellas(int n) {
-	for (int i = 0; i < n; i++) {
-		for (int j = 0; j < i + 1; j++) {
-			std::cout << "*";
-			
-		}
-		std::cout << "\n";
-	}
-	for (int i = n-2; i >= 0; i--) {
-		for (int j = 0; j < i + 1; j++) {
-			std::cout << "*";
-			
-		}
-		std::cout << "\n";
-	}
-
-}
-
-void Fibonacci(int n) {
-	int a = 1;
-	int b = 1;
-	int c = 0;
-	for (int i = 0; i < n; i++) {
-		std::cout << a << " ";
-		c = a + b;
-		a = b;
-		b = c;
-	}
-}
-
-bool EsPrimo(int numero) { 
-	for (int i = 2; i < numero; i++) {
-		if (numero%i==0) {
-			return false;
-		}
-	}
-	return true;
-}*/
