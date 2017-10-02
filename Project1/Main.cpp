@@ -5,6 +5,9 @@
 #include <vector>
 #include "InputFile.h"
 
+
+
+
 // Identificador del manager al que vamos a asociar todos los VBOs
 GLuint vao;
 
@@ -26,7 +29,7 @@ void Initialize()
 	colors.push_back(glm::vec3(1.0f, 1.0f, 1.0f));
 	for (int i = 0; i <= 360; i++) {
 		positions.push_back(glm::vec2((float)glm::cos(glm::radians((float)i)),(float)glm::sin(glm::radians((float)i))));
-		colors.push_back(glm::vec3((float)glm::cos(glm::radians((float)i)), (float)glm::sin(glm::radians((float)i)), 0.0f));
+		colors.push_back(glm::vec3(1.0f,1.0f, 0.0f));
 	}
 
 	/////////////////////////////////////////////////
