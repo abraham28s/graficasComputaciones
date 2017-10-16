@@ -1,4 +1,4 @@
-#include "Shader.h"
+#include "shader.h"
 #include "InputFile.h"
 
 shader::shader() {
@@ -9,21 +9,32 @@ shader::~shader() {
 	glDeleteShader(_shaderHandle);
 }
 
-void shader::CreateShader(std::string path, GLenum type) {
+void shader::CreateShader(string path, GLenum type) {
+
 	if (_shaderHandle != 0) {
 		glDeleteShader(_shaderHandle);
 	}
 
-	InputFile ifile;
-	ifile.Read(path);
-	std::string vertexSource = ifile.GetContents();
+	// Creamos un objeto para leer archivos
+	InputFile myfile;
 
+	// VERTEX SHADER
+	// Leemos el archivo Default.vert donde está el código del vertex shader.
+	myfile.Read(path);
+	// Obtenemos el código fuente y lo guardamos en un string
+	string ShaderSource = myfile.GetContents();
+	// Creamos un shader de tipo vertex guardamos su identificador en una variable
 	_shaderHandle = glCreateShader(type);
-	const GLchar *vertexSource_c = (const GLchar*)vertexSource.c_str();
-	glShaderSource(_shaderHandle, 1, &vertexSource_c, nullptr);
+
+	// Obtener los datos en el formato correcto: Vil Cast
+	const GLchar *ShaderSource_c = (const GLchar*)ShaderSource.c_str();
+	// Le estamos dando el código fuente a OpenGL para que se los asigne al shader
+	glShaderSource(_shaderHandle, 1, &ShaderSource_c, nullptr);
+	// Compilamos el shader en busca de errores.
+	// Vamos a asumir que no hay ningún error.
 	glCompileShader(_shaderHandle);
 }
 
-GLuint shader::GetHandle() {
+GLuint shader::getHandle() {
 	return _shaderHandle;
 }
