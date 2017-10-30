@@ -4,10 +4,10 @@
 //Ricardo Gutierrez	A01376121
 //Segundo Examen parcial
 ///////////////////////
-
-#include <iostream>
 #include <GL/glew.h>
+#include <iostream>
 #include <GL/freeglut.h>
+
 #include <vector>
 #include <glm/glm.hpp>
 #include <iostream>
@@ -33,89 +33,152 @@ int creciendo = 1;
 
 void Initialize() {
 
-	vector<vec3> positions;
-	vector<vec3> colors;
+	vector<vec3> colors,normals,positions;
 
-	positions.push_back(glm::vec3(0.0f, 1.0f, 0.0f));
-	positions.push_back(glm::vec3(1.0f, -1.0f, 1.0f));
-	positions.push_back(glm::vec3(1.0f, -1.0f, -1.0f));
-	positions.push_back(glm::vec3(-1.0f, -1.0f, -1.0f));
-	positions.push_back(glm::vec3(-1.0f, -1.0f, 1.0f));
+	//Colores por cara
+	colors.push_back(vec3(1.0f, 1.0f, 0));
+	colors.push_back(vec3(1.0f, 1.0f, 0));
+	colors.push_back(vec3(1.0f, 1.0f, 0));
+	colors.push_back(vec3(1.0f, 1.0f, 0));
 
-	colors.push_back(glm::vec3(0.0f, 0.0f, 1.0f));
-	colors.push_back(glm::vec3(0.0f, 1.0f, 0.0f));
-	colors.push_back(glm::vec3(1.0f, 0.0f, 0.0f));
+	colors.push_back(vec3(0.0f, 1.0f, 0.0f));
+	colors.push_back(vec3(0.0f, 1.0f, 0.0f));
+	colors.push_back(vec3(0.0f, 1.0f, 0.0f));
+	colors.push_back(vec3(0.0f, 1.0f, 0.0f));
 
-	colors.push_back(glm::vec3(1.0f, 0.0f, 1.0f));
-	colors.push_back(glm::vec3(1.0f, 1.0f, 0.0f));
+	colors.push_back(vec3(0.0f, 0.749f, 1.0f));
+	colors.push_back(vec3(0.0f, 0.749f, 1.0f));
+	colors.push_back(vec3(0.0f, 0.749f, 1.0f));
+	colors.push_back(vec3(0.0f, 0.749f, 1.0f));
+
+	colors.push_back(vec3(1.0f, 0.0f, 0.0f));
+	colors.push_back(vec3(1.0f, 0.0f, 0.0f));
+	colors.push_back(vec3(1.0f, 0.0f, 0.0f));
+	colors.push_back(vec3(1.0f, 0.0f, 0.0f));
+
+	colors.push_back(vec3(1.0f, 1.0f, 0.00f));
+	colors.push_back(vec3(1.0f, 1.0f, 0.0f));
+	colors.push_back(vec3(1.0f, 1.0f, 0.0f));
+	colors.push_back(vec3(1.0f, 1.0f, 0.0f));
+
+	colors.push_back(vec3(1.0f, 0.549f, 0.0f));
+	colors.push_back(vec3(1.0f, 0.549f, 0.0f));
+	colors.push_back(vec3(1.0f, 0.549f, 0.0f));
+	colors.push_back(vec3(1.0f, 0.549f, 0.0f));
+
+	//Posiciones por cara
+	positions.push_back(vec3(3.0f, -3.0f, -3.0f));
+	positions.push_back(vec3(3.0f, 3.0f, -3.0f));
+	positions.push_back(vec3(-3.0f, -3.0f, -3.0f));
+	positions.push_back(vec3(-3.0f, 3.0f, -3.0f));
+
+	positions.push_back(vec3(3.0f, -3.0f, -3.0f));
+	positions.push_back(vec3(3.0f, 3.0f, -3.0f));
+	positions.push_back(vec3(3.0f, -3.0f, 3.0f));
+	positions.push_back(vec3(3.0f, 3.0f, 3.0f));
+
+	positions.push_back(vec3(3.0f, -3.0f, 3.0f));
+	positions.push_back(vec3(3.0f, -3.0f, -3.0f));
+	positions.push_back(vec3(-3.0f, -3.0f, 3.0f));
+	positions.push_back(vec3(-3.0f, -3.0f, -3.0f));
+
+	positions.push_back(vec3(3.0f, -3.0f, 3.0f));
+	positions.push_back(vec3(3.0f, 3.0f, 3.0f));
+	positions.push_back(vec3(-3.0f, -3.0f, 3.0f));
+	positions.push_back(vec3(-3.0f, 3.0f, 3.0f));
+
+	positions.push_back(vec3(-3.0f, -3.0f, -3.0f));
+	positions.push_back(vec3(-3.0f, 3.0f, -3.0f));
+	positions.push_back(vec3(-3.0f, -3.0f, 3.0f));
+	positions.push_back(vec3(-3.0f, 3.0f, 3.0f));
+
+	positions.push_back(vec3(3.0f, 3.0f, 3.0f));
+	positions.push_back(vec3(3.0f, 3.0f, -3.0f));
+	positions.push_back(vec3(-3.0f, 3.0f, 3.0f));
+	positions.push_back(vec3(-3.0f, 3.0f, -3.0f));
+
+
+	normals.push_back(vec3(1.0f, 0.0f, 0.0f));  
+	normals.push_back(vec3(1.0f, 0.0f, 0.0f)); 
+	normals.push_back(vec3(1.0f, 0.0f, 0.0f)); 
+	normals.push_back(vec3(1.0f, 0.0f, 0.0f)); 
+													 
+	normals.push_back(vec3(0.0f, 0.0f, 1.0f)); 
+	normals.push_back(vec3(0.0f, 0.0f, 1.0f)); 
+	normals.push_back(vec3(0.0f, 0.0f, 1.0f)); 
+	normals.push_back(vec3(0.0f, 0.0f, 1.0f)); 
+													 
+	normals.push_back(vec3(-1.0f, 0.0f, 0.0f)); 
+	normals.push_back(vec3(-1.0f, 0.0f, 0.0f)); 
+	normals.push_back(vec3(-1.0f, 0.0f, 0.0f)); 
+	normals.push_back(vec3(-1.0f, 0.0f, 0.0f)); 
+													  
+	normals.push_back(vec3(0.0f, 0.0f, -1.0f));  
+	normals.push_back(vec3(0.0f, 0.0f, -1.0f)); 
+	normals.push_back(vec3(0.0f, 0.0f, -1.0f)); 
+	normals.push_back(vec3(0.0f, 0.0f, -1.0f)); 
+													  
+	normals.push_back(vec3(0.0f, -1.0f, .0f)); 
+	normals.push_back(vec3(0.0f, -1.0f, .0f)); 
+	normals.push_back(vec3(0.0f, -1.0f, .0f)); 
+	normals.push_back(vec3(0.0f, -1.0f, .0f));  
+													  
+	normals.push_back(vec3(0.0f, 1.0f, .0f));
+	normals.push_back(vec3(0.0f, 1.0f, .0f)); 
+	normals.push_back(vec3(0.0f, 1.0f, .0f)); 
+	normals.push_back(vec3(0.0f, 1.0f, .0f));
 
 
 	vector<unsigned int> indices = {
-		0, 1, 2,
-		0, 2, 3,
-		0, 3, 4,
-		0, 4, 1,
-		1, 3, 2, 4, 3, 1
+		0, 1, 2, 2, 1, 3,
+		4, 5, 6, 6, 5, 7,
+		8, 9, 10, 10, 9, 11,
+		12, 13, 14, 14, 13, 15,
+		16, 17, 18, 18, 17, 19,
+		20,21,22,22,21,23,
 	};
-
-	mesh.CreateMesh(5);
+	mesh.CreateMesh(positions.size());
 	mesh.SetPositionAttribute(positions, GL_STATIC_DRAW, 0);
 	mesh.SetColorAttribute(colors, GL_STATIC_DRAW, 1);
+	mesh.SetNormalAttribute(normals, GL_STATIC_DRAW, 2);
 	mesh.SetIndices(indices, GL_STATIC_DRAW);
 
 	program.CreateProgram();
-	program.AttachShader("Default.vert", GL_VERTEX_SHADER);
-	program.AttachShader("Default.frag", GL_FRAGMENT_SHADER);
 	program.SetAttribute(0, "VertexPosition");
 	program.SetAttribute(1, "VertexColor");
+	program.SetAttribute(2, "VertexNormal");
+	program.AttachShader("Light.vert", GL_VERTEX_SHADER);
+	program.AttachShader("Light.frag", GL_FRAGMENT_SHADER);
 	program.LinkProgram();
-	_camera.MoveForward(0.0f);
-	_camera.SetPosition(0, 0, 25);
-	_transform.SetScale(3, 3, 3);
+
+	_transform.SetScale(0.3f, 0.3f, 0.3f);
+	_transform2.SetScale(8.0f, 0.01f, 8.0f);
+
+	_transform.SetPosition(0.0f, 0.0f, 0.0f);
+	_transform2.SetPosition(0.0f, -2.0f, 0.0f);
+
+	_camera.SetPosition(0.0f, 0.0f, 10.0f);
 }
 
 void GameLoop() {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-	_transform.Rotate(0.01f, 0.01f, 0.01f, true);
-	deg += .01;
-	_transform.SetPosition(5 * glm::cos(glm::radians(deg)), 5 * glm::sin(glm::radians(deg)), 0.0f);
-
-	_transform2.Rotate(-0.01f, -0.01f, -0.01f, true);
-	_transform2.SetScale(scala,scala,scala);
-
-	if (scala >= 1.0f) {
-		creciendo = 0;
-	}
-	else if (scala <= 0.25f) {
-		creciendo = 1;
-	}
-
-	if (creciendo == 0) {
-		scala -= 0.0001f;
-	}
-	else if (creciendo == 1) {
-		scala += 0.0001f;
-	}
-
-	
+	_transform.Rotate(0.01f, 0.01f, 0.01f, false);
 
 	program.Activate();
-
-	program.SetUniformMatrix("mvplMatrix", _camera.GetViewProjection()* _transform.GetModelMatrix());
+	program.SetUniformMatrix("modelMatrix", _transform.GetModelMatrix());
+	program.SetUniformMatrix("mvpMatrix", _camera.GetViewProjection() * _transform.GetModelMatrix());
+	program.SetUniformVector("LightColor", glm::vec3(1.0f, 1.0f, 1.0f));
+	program.SetUniformVector("LightPosition", glm::vec3(0, 0, 5.0f));
+	program.SetUniformVector("CamaraPosition", _camera.GetPosition());
 	mesh.Draw(GL_TRIANGLES);
-
-	/*program.SetUniformMatrix("mvplMatrix", _camera.GetViewProjection()* _transform.GetModelMatrix());
-	mesh.Draw(GL_TRIANGLES)*/
-
-	program.SetUniformMatrix("mvplMatrix", _camera.GetViewProjection()* _transform2.GetModelMatrix());
+	
+	program.SetUniformMatrix("mvpMatrix", _camera.GetViewProjection() * _transform2.GetModelMatrix());
+	program.SetUniformMatrix("modelMatrix", _transform2.GetModelMatrix());
 	mesh.Draw(GL_TRIANGLES);
-
-
-
 	program.Desactivate();
 
-
+	//Cuando terminamos de renderear, cambiamos los buffers.
 	glutSwapBuffers();
 }
 

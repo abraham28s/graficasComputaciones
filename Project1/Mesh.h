@@ -19,6 +19,7 @@ public:
 	void SetPositionAttribute(vector<vec3> positions, GLenum usage, GLuint locationIndex);
 	void SetColorAttribute(vector<vec3> colors, GLenum usage, GLuint locationIndex);
 	void SetColorAttribute(vector<vec4> colors, GLenum usage, GLuint locationIndex);
+	void SetNormalAttribute(vector<vec3> normal, GLenum usage, GLuint locationIndex);
 	void SetIndices(vector<unsigned int> indices, GLenum usage);
 
 private:
@@ -28,6 +29,7 @@ private:
 	GLuint _vertexArrayObject;
 	GLuint _positionsVertexBufferObject;
 	GLuint _colorsVertexBufferObject;
+	GLuint _normalsVertexBufferObject;
 	GLuint _vertexCount;
 
 	GLuint _indexBufferObject;

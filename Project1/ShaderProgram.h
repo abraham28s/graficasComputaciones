@@ -25,7 +25,7 @@ public:
 	void SetUniformf(string name, float x, float y, float z);
 	void SetUniformf(string name, float x, float y, float z, float w);
 	void SetUniformMatrix(string name, mat4 matrix);
-
+	void SetUniformVector(string name, vec3 vector);
 
 private:
 	GLuint _programHandle;

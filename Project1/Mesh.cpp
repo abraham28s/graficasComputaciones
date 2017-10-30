@@ -78,6 +78,13 @@ void Mesh::SetColorAttribute(vector<vec4> colors, GLenum usage, GLuint locationI
 	}
 }
 
+void Mesh::SetNormalAttribute(std::vector<glm::vec3> normal, GLenum usage, GLuint locationIndex)
+{
+	if (normal.size() > 0 && normal.size() == _vertexCount)
+		SetAttributeData(_normalsVertexBufferObject, sizeof(glm::vec3) * normal.size(), normal.data(), usage, locationIndex, 3);
+}
+
+
 void Mesh::SetIndices(vector<unsigned int> indices, GLenum usage) {
 	_indexCount = indices.size();
 

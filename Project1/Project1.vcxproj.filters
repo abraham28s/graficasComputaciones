@@ -83,5 +83,7 @@
     <None Include="DiscardCenter.vert" />
     <None Include="Default.vert" />
     <None Include="Default.frag" />
+    <None Include="Light.frag" />
+    <None Include="Light.vert" />
   </ItemGroup>
 </Project>
