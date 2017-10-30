@@ -1,7 +1,7 @@
 
 //////////////////////////
 //Abraham Soto	A01370699
-//Ricardo Gutierrez	A01376121
+//Javier Esponda	A013704645
 //Segundo Examen parcial
 ///////////////////////
 #include <GL/glew.h>
