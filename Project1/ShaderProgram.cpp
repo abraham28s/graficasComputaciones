@@ -92,3 +92,8 @@ void ShaderProgram::DeleteProgram() {
 	DeleteAndDetachShaders();
 	glDeleteProgram(_programHandle);
 }
+
+void ShaderProgram::SetUniformi(string name, int value) {
+	GLint  uniformLocation = glGetUniformLocation(_programHandle, (const GLchar*)name.c_str());
+	glUniform1i(uniformLocation, value);
+}
