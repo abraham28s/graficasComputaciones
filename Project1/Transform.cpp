@@ -55,7 +55,7 @@ void Transform::Translate(float x, float y, float z, bool world) {
 	UpdateModelMatrixPosition();
 }
 
-void Transform::MoveFoward(float delta, bool world) {
+void Transform::MoveForward(float delta, bool world) {
 	if (world) {
 		_position += WORLD_FOWARD_VECTOR*delta;
 	}
@@ -116,4 +116,5 @@ void Transform::UpdateModelMatrixRotationScale() {
 	_modelMatrix[1] *= _scale.y;
 	_modelMatrix[2] *= _scale.z;
 	UpdateModelMatrixPosition();
+	UpdateLocalVector();
 }

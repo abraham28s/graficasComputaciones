@@ -1,25 +1,35 @@
 #include "InputFile.h"
 #include <fstream>
 #include <iostream>
+#include <sstream> 
+using namespace std;
 
-bool InputFile::Read(std::string filename) {
-
-	std::ifstream archivo;
-	archivo.open(filename,
-		std::ios::in);
-	if (!archivo)
+bool InputFile::Read(const std::string& filename)
+{
+	if (filename.empty())
 	{
-		_contents = "";
+		std::cout << "No filemname provided" << std::endl;
 		return false;
 	}
-	_contents = "";
-	std::string linea;
-	while (std::getline(archivo, linea))
-		_contents += linea + "\n";
-	archivo.close();
+
+	std::fstream inputFile(filename, std::fstream::in);
+
+	if (!inputFile.is_open())
+	{
+		std::cout << "Could not open file" << filename << std::endl;
+		return false;
+	}
+
+	std::stringstream ss;
+	ss << inputFile.rdbuf();
+	_contents = ss.str();
+
+	//std::cout << _contents << filename << std::endl;
 	return true;
 }
 
-std::string InputFile::GetContents() {
+const std::string InputFile::GetContents() const
+{
 	return _contents;
 }
+

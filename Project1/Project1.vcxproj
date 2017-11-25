@@ -125,12 +125,9 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Camera.cpp" />
-    <ClCompile Include="Circle.cpp" />
-    <ClCompile Include="Employee.cpp" />
     <ClCompile Include="InputFile.cpp" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="Mesh.cpp" />
-    <ClCompile Include="Rectangle.cpp" />
     <ClCompile Include="shader.cpp" />
     <ClCompile Include="ShaderProgram.cpp" />
     <ClCompile Include="Texture2D.cpp" />
@@ -138,18 +135,12 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Camera.h" />
-    <ClInclude Include="Circle.h" />
-    <ClInclude Include="Employee.h" />
     <ClInclude Include="InputFile.h" />
     <ClInclude Include="Mesh.h" />
-    <ClInclude Include="Rectangle.h" />
     <ClInclude Include="shader.h" />
     <ClInclude Include="ShaderProgram.h" />
     <ClInclude Include="Texture2D.h" />
     <ClInclude Include="Transform.h" />
-  </ItemGroup>
-  <ItemGroup>
-    <Text Include="Prueba.txt" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Default.frag" />

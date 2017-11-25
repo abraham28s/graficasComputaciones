@@ -1,12 +1,11 @@
 #pragma once
-#include <string>
+#include <string> 
+
 class InputFile
 {
 public:
-	bool Read(std::string filename);
-	std::string GetContents();
-
+	bool Read(const std::string& filename);
+	const std::string GetContents() const;
 private:
 	std::string _contents;
 };
-
